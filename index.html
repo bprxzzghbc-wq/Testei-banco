@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banco Gonçalo — Versão Premium</title>
+
+<style>
+/* ---------------------------------------------------
+   ESTILO GERAL
+--------------------------------------------------- */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+body{background:#f3f3f7;color:#222;transition:0.3s;}
+body.dark{background:#121212;color:#eee;}
+
+.app{max-width:480px;margin:auto;padding:15px;}
+
+/* ---------------------------------------------------
+   HEADER
+--------------------------------------------------- */
+.header{
+    background:#d71c1c;
+    color:white;
+    padding:35px 25px;
+    border-radius:30px;
+    text-align:center;
+    margin-bottom:25px;
+    box-shadow:0 5px 25px rgba(0,0,0,0.25);
+}
+.header h1{font-size:28px;font-weight:700;}
+.header p{opacity:0.9;margin-top:5px;}
+
+.toggle-btn{
+    margin-top:12px;
+    padding:8px 14px;
+    border:none;
+    border-radius:12px;
+    background:white;
+    color:#d71c1c;
+    font-weight:600;
+    cursor:pointer;
+}
+
+/* ---------------------------------------------------
+   NOVAS ABAS — ESTILO PREMIUM
+--------------------------------------------------- */
+.nav-container{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    margin-bottom:20px;
+}
+
+.nav-card{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:14px 18px;
+    background:white;
+    border-radius:18px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.08);
+    cursor:pointer;
+    transition:0.25s;
+    position:relative;
+}
+
+body.dark .nav-card{
+    background:#2b2b2b;
+    box-shadow:0 4px 14px rgba(0,0,0,0.5);
+}
+
+.nav-card:hover{
+    transform:translateY(-3px);
+}
+
+.nav-card.active{
+    border:2px solid #d71c1c;
+}
+
+.nav-icon{
+    width:32px;
+    height:32px;
+}
+
+.tag{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-50%);
+    background:#d71c1c;
+    color:white;
+    padding:3px 8px;
+    border-radius:8px;
+    font-size:12px;
+}
+
+/* ---------------------------------------------------
+   CARDS E LISTAS
+--------------------------------------------------- */
+.card{
+    background:white;
+    border-radius:20px;
+    padding:18px;
+    margin-bottom:15px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.08);
+}
+
+body.dark .card{
+    background:#2b2b2b;
+    box-shadow:0 4px 14px rgba(0,0,0,0.5);
+}
+
+.total-card{
+    background:linear-gradient(135deg,#d71c1c,#a80000);
+    color:white;
+    text-align:center;
+}
+
+.item{
+    display:flex;
+    justify-content:space-between;
+    padding:14px;
+    background:white;
+    border-radius:16px;
+    margin-bottom:10px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.08);
+}
+
+body.dark .item{
+    background:#2b2b2b;
+}
+
+/* ---------------------------------------------------
+   FORMULÁRIOS
+--------------------------------------------------- */
+.add-button{
+    background:#d71c1c;
+    color:white;
+    border:none;
+    padding:10px 14px;
+    border-radius:12px;
+    font-weight:600;
+    cursor:pointer;
+    margin:10px 0;
+}
+
+/* ---------------------------------------------------
+   ESCONDER ABAS
+--------------------------------------------------- */
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+</style>
+</head>
+
+<body class="light">
+<div class="app">
+
+<!-- HEADER -->
+<header class="header">
+    <h1>Olá Gonçalo!</h1>
+    <p>Bem-vindo ao seu Banco Premium</p>
+    <button class="toggle-btn" onclick="toggleDarkMode()">Dark / Light</button>
+</header>
+
+<!-- ABAS PREMIUM -->
+<div class="nav-container">
+    <div class="nav-card active" data-target="saldos">
+        <img class="nav-icon" src="data:image/svg+xml;utf8,
+        <svg fill='red' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
+        <path d='M2 7a2 2 0 0 1 2-2h16a1 1 0 1 1 0 2H4v10h16a1 1 0 1 1 0 2H4a2 2 0 0 1-2-2V7z'/>
+        </svg>"/>
+        <span>Saldos</span>
+        <span class="tag">Novo</span>
+    </div>
+
+    <div class="nav-card" data-target="movimentos">
+        <img class="nav-icon" src="data:image/svg+xml;utf8,
+        <svg fill='red' viewBox='0 0 24 24'>
+        <path d='M3 3h18v2H3V3zm0 7h18v2H3v-2zm0 7h18v2H3v-2z'/>
+        </svg>"/>
+        <span>Movimentos</span>
+    </div>
+
+    <div class="nav-card" data-target="planeamento">
+        <img class="nav-icon" src="data:image/svg+xml;utf8,
+        <svg fill='red' viewBox='0 0 24 24'>
+        <path d='M4 4h16v2H4V4zm0 6h16v2H4v-2zm0 6h16v2H4v-2z'/>
+        </svg>"/>
+        <span>Planeamento</span>
+    </div>
+</div>
+
+<!-- ---------------------------------------------------
+     ABA SALDOS
+--------------------------------------------------- -->
+<div id="saldos" class="tab-content active">
+    <section class="card total-card">
+        <span>Fluxo Total</span>
+        <h2>€ <span id="total">0.00</span></h2>
+    </section>
+
+    <section class="card">
+        <h3>Saldos</h3>
+        <div id="lista-saldos"></div>
+    </section>
+
+    <canvas id="saldoGrafico" width="400" height="200"></canvas>
+</div>
+
+<!-- ---------------------------------------------------
+     ABA MOVIMENTOS
+--------------------------------------------------- -->
+<div id="movimentos" class="tab-content">
+    <button class="add-button" onclick="mostrarFormMovimento()">+ Adicionar Movimento</button>
+
+    <div id="novo-movimento" style="display:none;">
+        <label>Tipo:</label>
+        <select id="tipo-movimento">
+            <option value="ganho">Ganho</option>
+            <option value="gasto">Gasto</option>
+        </select>
+
+        <label>Valor (€):</label>
+        <input type="number" id="valor-movimento">
+
+        <label>Descrição:</label>
+        <input type="text" id="descricao-movimento">
+
+        <label>Aba:</label>
+        <select id="aba-movimento"></select>
+
+        <button class="add-button" onclick="adicionarMovimento()">Salvar</button>
+    </div>
+
+    <div id="lista-movimentos-mensal"></div>
+</div>
+
+<!-- ---------------------------------------------------
+     ABA PLANEAMENTO
+--------------------------------------------------- -->
+<div id="planeamento" class="tab-content">
+    <h3>Planeamento</h3>
+    <div id="tabela-planeamento"></div>
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+/* ---------------------------------------------------
+   LÓGICA ORIGINAL (melhorada)
+--------------------------------------------------- */
+
+let abas = {
+    "Ibiza":245,"Dela":4010,"Money 2026":2775,
+    "Moedas carteira":131.92,"Cartão":19.62
+};
+
+let movimentos = {
+    "2026-04":[{tipo:"ganho",valor:100,aba:"Money 2026",desc:"Exemplo",data:"2026-04-08"}]
+};
+
+/* ---------------------------------------------------
+   DARK MODE
+--------------------------------------------------- */
+function toggleDarkMode(){
+    document.body.classList.toggle("dark");
+}
+
+/* ---------------------------------------------------
+   ABAS PREMIUM
+--------------------------------------------------- */
+document.querySelectorAll(".nav-card").forEach(card=>{
+    card.onclick = ()=>{
+        document.querySelectorAll(".nav-card").forEach(c=>c.classList.remove("active"));
+        card.classList.add("active");
+
+        document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
+        document.getElementById(card.dataset.target).classList.add("active");
+    };
+});
+
+/* ---------------------------------------------------
+   SALDOS
+--------------------------------------------------- */
+function atualizarTotais(){
+    let total = Object.values(abas).reduce((a,b)=>a+b,0);
+    document.getElementById("total").textContent = total.toFixed(2);
+}
+
+function atualizarSaldosLista(){
+    const lista = document.getElementById("lista-saldos");
+    lista.innerHTML = "";
+
+    for(const nome in abas){
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+            <span>${nome}</span>
+            <strong>€ ${abas[nome].toFixed(2)}</strong>
+        `;
+        lista.appendChild(div);
+    }
+
+    atualizarTotais();
+}
+
+atualizarSaldosLista();
+
+/* ---------------------------------------------------
+   MOVIMENTOS
+--------------------------------------------------- */
+function mostrarFormMovimento(){
+    const f = document.getElementById("novo-movimento");
+    f.style.display = f.style.display === "none" ? "block" : "none";
+}
+
+function preencherSelectAbas(){
+    const s = document.getElementById("aba-movimento");
+    s.innerHTML = "";
+    Object.keys(abas).forEach(a=>{
+        const o = document.createElement("option");
+        o.value = a;
+        o.textContent = a;
+        s.appendChild(o);
+    });
+}
+preencherSelectAbas();
+
+function adicionarMovimento(){
+    const tipo = document.getElementById("tipo-movimento").value;
+    const valor = parseFloat(document.getElementById("valor-movimento").value);
+    const aba = document.getElementById("aba-movimento").value;
+    const desc = document.getElementById("descricao-movimento").value;
+    const data = new Date().toISOString().split("T")[0];
+
+    if(!valor || !desc){ alert("Preencha tudo"); return; }
+
+    abas[aba] += tipo === "gasto" ? -valor : valor;
+
+    const mes = data.slice(0,7);
+    if(!movimentos[mes]) movimentos[mes] = [];
+
+    movimentos[mes].push({tipo,valor,aba,desc,data});
+
+    atualizarSaldosLista();
+    listarMovimentos();
+}
+
+function listarMovimentos(){
+    const lista = document.getElementById("lista-movimentos-mensal");
+    lista.innerHTML = "";
+
+    for(const mes in movimentos){
+        movimentos[mes].forEach(m=>{
+            const div = document.createElement("div");
+            div.className = "item";
+            div.innerHTML = `
+                <span>${m.data} — ${m.desc} (${m.aba})</span>
+                <strong>€ ${m.valor.toFixed(2)}</strong>
+            `;
+            lista.appendChild(div);
+        });
+    }
+}
+listarMovimentos();
+
+/* ---------------------------------------------------
+   PLANEAMENTO
+--------------------------------------------------- */
+function mostrarPlaneamento(){
+    const c = document.getElementById("tabela-planeamento");
+    c.innerHTML = "";
+
+    for(const nome in abas){
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+            <span>${nome}</span>
+            <input type="number" value="${abas[nome]}" 
+            oninput="abas['${nome}']=parseFloat(this.value)||0; atualizarSaldosLista();">
+        `;
+        c.appendChild(div);
+    }
+}
+mostrarPlaneamento();
+</script>
+
+</body>
+</html>
